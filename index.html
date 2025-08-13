@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,22 +18,26 @@
             text-align: center;
             padding: 20px;
         }
+
         .container {
             max-width: 600px;
             background: #fff;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             font-size: 2rem;
             margin-bottom: 10px;
         }
+
         p {
             margin-bottom: 15px;
             color: #555;
             line-height: 1.6;
         }
+
         .links a {
             display: inline-block;
             margin: 6px;
@@ -43,9 +48,11 @@
             border-radius: 6px;
             transition: background 0.3s;
         }
+
         .links a:hover {
             background: #0056b3;
         }
+
         .note {
             margin-top: 20px;
             padding: 15px;
@@ -56,6 +63,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>🚧 本站建设中 🚧</h1>
@@ -71,6 +79,47 @@
                 <li>中国大陆用户建议使用代理改善访问速度</li>
             </ul>
         </div>
+        <div class="thanks" style="
+    margin-top: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-left: 4px solid #ccc;
+    font-size: 0.9rem;
+    color: #777;
+    text-align: left;">
+
+            <button id="toggleThanks" style="
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 0.95rem;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 0;
+    ">
+                特别感谢 ▼
+            </button>
+
+            <ul id="thanksList" style="margin: 6px 0 0 20px; padding: 0; display: none;">
+                <li>runnnn</li>
+                <li>*</li>
+            </ul>
+        </div>
     </div>
 </body>
+<script>
+    const toggleBtn = document.getElementById('toggleThanks');
+    const thanksList = document.getElementById('thanksList');
+
+    toggleBtn.addEventListener('click', () => {
+        if (thanksList.style.display === 'none') {
+            thanksList.style.display = 'block';
+            toggleBtn.textContent = '特别感谢 ▲';
+        } else {
+            thanksList.style.display = 'none';
+            toggleBtn.textContent = '特别感谢 ▼';
+        }
+    });
+</script>
+
 </html>
