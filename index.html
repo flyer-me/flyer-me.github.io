@@ -38,19 +38,33 @@
             line-height: 1.6;
         }
 
-        .links a {
+        .link-group {
+            margin: 20px 0;
+        }
+
+        .link-group a {
             display: inline-block;
-            margin: 6px;
-            padding: 10px 20px;
-            background: #007bff;
-            color: #fff;
+            margin: 8px 12px;
+            padding: 10px 18px;
             text-decoration: none;
+            color: #fff;
+            background-color: #0078d7;
             border-radius: 6px;
             transition: background 0.3s;
         }
 
+        .link-group a:hover {
+            background-color: #005fa3;
+        }
+
+        .links a {
+            color: #0078d7;
+            margin: 0 8px;
+            text-decoration: none;
+        }
+
         .links a:hover {
-            background: #0056b3;
+            text-decoration: underline;
         }
 
         .note {
@@ -68,10 +82,15 @@
     <div class="container">
         <h1>🚧 本站建设中 🚧</h1>
         <p>感谢您的访问，本站正在建设中，敬请期待！</p>
-        <a href="https://wauto.flyerme.online">WeAutoTools主站</a>
+
+        <div class="link-group">
+            <a href="https://wauto.flyerme.online" target="_blank">WeAutoTools主站</a>
+            <a href="https://frp-bus.com:17036" target="_blank">备用链接</a>
+        </div>
+
         <div class="links">
             <a href="https://github.com/flyer-me" target="_blank">我的 GitHub</a>
-            <a href="mailto:你的邮箱">联系我</a>
+            <a href="mailto:flyer558@163.com">联系我</a>
         </div>
 
         <div class="note">
@@ -103,7 +122,6 @@
 
             <ul id="thanksList" style="margin: 6px 0 0 20px; padding: 0; display: none;">
                 <li>runnnn</li>
-                <li>*</li>
             </ul>
         </div>
     </div>
