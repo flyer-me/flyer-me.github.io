@@ -15,7 +15,6 @@
   noblank: true
 
 - type: website # 自定义网站
-  label: "我的站点" # 显示文字
   url: https://wauto.flyerme.online/
 # Uncomment and complete the url below to enable more contact options
 #
