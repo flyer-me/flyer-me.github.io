@@ -4,11 +4,18 @@ from DrissionPage import ChromiumPage, ChromiumOptions
 from openpyxl import Workbook
 
 # 设置日志配置
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger()
-logger.addHandler(logging.StreamHandler())
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("app.log", encoding="utf-8"),
+        logging.StreamHandler()
+    ]
+)
 
-DATA_FILE = "data.json"
+DATA_FILE = "datacache.json"
+OUTPUT_FILE = "帖子数据.xlsx"
+EDGE_PATH = r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 
 def safe_modify_file(
     target_path: str,
@@ -30,7 +37,7 @@ def safe_modify_file(
         processor(target_path, tmp_path) # 调用业务逻辑
         os.replace(tmp_path, target_path)
     except Exception as e:
-        if tmp_path and os.path.exists(tmp_path): os.unlink(tmp_path)
+        if tmp_path and os.path.exists(tmp_path): os.remove(tmp_path)
         raise e
 
 def load_saved(file): 
@@ -48,7 +55,7 @@ def load_saved(file):
 '''
 def main():
 
-    co = ChromiumOptions().set_browser_path(r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe').ignore_certificate_errors()
+    co = ChromiumOptions().set_browser_path(EDGE_PATH).ignore_certificate_errors()
     
     tab = ChromiumPage(addr_or_opts=co, timeout = 5).get_tab()
     tab.get('https://quotes.toscrape.com/')
@@ -59,31 +66,29 @@ def main():
         tab('#password').input('passwd')
         tab('@class:btn btn-primary').click()
 
-    logging.info("登录成功，正在获取标签列表...")
     eles = tab('@class:col-md-4 tags-box').eles('@class:tag-item')
+    logging.info("获取标签列表")
     tags = [ele.text for ele in eles]
     logging.info(f"获取到{len(tags)}个标签")
 
-    all_data = load_saved(DATA_FILE)
-    saved_tags = {item['标签'] for item in all_data} if all_data else set()
+    saved = load_saved(DATA_FILE)
+    saved_tags = {item['标签'] for item in saved} if saved else set()
     tags = [tag for tag in tags if tag not in saved_tags]
-    logger.info(f"已保存可跳过: {len(saved_tags)}。待处理: {len(tags)}")
+    logging.info(f"已保存可跳过: {len(saved_tags)}。待处理: {len(tags)}")
 
     data_buffer: List[Dict]  = []
     try:
         for tag in tags:
             tab.get(f"https://quotes.toscrape.com/tag/{tag}/")
-            logging.info(f"正在操作标签: {tag}")
             text = tab.s_ele('@class:quote').text
             data_buffer.append({'标签': tag, '内容': text})
-            logging.info("已获取内容。")
     except Exception as e:
         logging.error(f"操作标签时发生错误: {e}")
         raise e
     finally:
         if data_buffer:
             def writer(src, tmp):
-                combined = load_saved(src)      # 读旧
+                combined = saved.copy()         # 读旧
                 combined.extend(data_buffer)    # 加新
                 with open(tmp, 'w', encoding='utf-8') as f:
                     for d in combined:
@@ -95,16 +100,17 @@ def main():
     logging.info("所有标签操作完成，正在保存数据...")
     
     # 将数据保存至xlsx文件
-    all_data = load_saved(DATA_FILE)
+    data = load_saved(DATA_FILE)
     wb = Workbook()
     ws = wb.active
-    headers = all_data[0].keys() if all_data else []
+    headers = data[0].keys() if data else []
     ws.append(list(headers))
     # 3. 写入数据行
-    for row in data_buffer:
+    for row in data:
         ws.append(list(row.values()))
-    wb.save("帖子数据.xlsx")
-    logging.info("数据已成功保存至帖子数据.xlsx")
+    wb.save(OUTPUT_FILE)
+    logging.info(f"数据已成功保存至{os.path.abspath(OUTPUT_FILE)}")
+    logging.info(f"全部操作完成")
 
 if __name__ == "__main__":
     try:
