@@ -20,7 +20,7 @@
 
 ## AI 完成任务示例（带上下文）
 
-- 创建文章：在 `_posts/` 中创建带有正确 front-matter 的文件，并把图片放入 `assets/img/posts/<slug>/`。
+- 创建文章：在 `_posts/` 中创建带有正确 front-matter 的文件，图片放入 `assets/img/posts/<slug>/`。
 - 校验：若需要对生成的静态站点内容运行校验，请参考 `tools/test.sh`（仅供维护者/CI 使用），不要在自动 agent 的默认行为中运行该脚本。
 
 ## 提示语模板
